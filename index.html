@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>114年度公播影片推薦專區｜楊梅高中圖書館</title>
+<style>
+:root{
+  --ink:#22315C; --paper:#F4F9FF; --card:#FFFFFF;
+  --pink:#FF5D8F; --orange:#FF9F1C; --teal:#00C2A8; --violet:#7C5CFF;
+  --blue:#2D9CDB; --red:#F25C54; --green:#38B000; --gold:#FFC53D;
+  --shadow:0 8px 24px rgba(34,49,92,.12);
+  --radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif;
+  background:var(--paper); color:var(--ink);
+  font-size:19px; line-height:1.75;
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(255,93,143,.08) 0 180px, transparent 200px),
+    radial-gradient(circle at 88% 20%, rgba(124,92,255,.08) 0 220px, transparent 240px),
+    radial-gradient(circle at 50% 90%, rgba(0,194,168,.07) 0 260px, transparent 280px);
+}
+button{font-family:inherit;cursor:pointer;}
+input,textarea,select{font-family:inherit;font-size:18px;}
+
+/* ===== 跑馬燈 Hero ===== */
+.hero{
+  max-width:1080px;margin:24px auto 8px;padding:34px 26px 30px;
+  background:linear-gradient(135deg,#2A3A6E 0%,#22315C 55%,#31255E 100%);
+  color:#fff;border-radius:26px;position:relative;overflow:hidden;
+  border:6px solid #FFC53D; box-shadow:var(--shadow);
+  text-align:center;
+}
+.bulbs{position:absolute;inset:6px;border-radius:18px;pointer-events:none;
+  background-image:radial-gradient(circle,#FFE28A 3.5px,transparent 4.5px);
+  background-size:34px 34px;background-position:8px 4px;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;padding:14px;
+  animation:blink 1.2s steps(2) infinite;opacity:.85;}
+@keyframes blink{50%{background-position:25px 4px;opacity:.45;}}
+@media (prefers-reduced-motion: reduce){
+  .bulbs,.pop,.stamp,.confetti-bit{animation:none !important;}
+}
+.hero .eyebrow{display:inline-block;background:var(--gold);color:#4A3200;font-weight:900;
+  padding:4px 18px;border-radius:99px;letter-spacing:.2em;font-size:16px;margin-bottom:14px;}
+.hero h1{font-size:clamp(30px,5.4vw,52px);font-weight:900;letter-spacing:.06em;line-height:1.3;
+  text-shadow:0 3px 0 rgba(0,0,0,.25);}
+.hero h1 .hl{color:#FFC53D;}
+.hero p{margin-top:12px;font-size:clamp(17px,2.4vw,21px);color:#DDE6FF;}
+.hero .film-emojis{font-size:30px;letter-spacing:10px;margin-top:10px;}
+
+/* ===== 工具列 ===== */
+.toolbar{max-width:1080px;margin:14px auto;padding:0 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;}
+.chip{border:none;border-radius:99px;padding:10px 20px;font-size:17px;font-weight:800;
+  background:#fff;color:var(--ink);box-shadow:var(--shadow);transition:transform .15s;}
+.chip:hover{transform:translateY(-2px) scale(1.03);}
+.chip.on{background:var(--ink);color:#fff;}
+.passport{max-width:1080px;margin:6px auto 20px;padding:16px 22px;background:#fff;border-radius:var(--radius);
+  box-shadow:var(--shadow);display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-left:auto;margin-right:auto;width:calc(100% - 32px);}
+.passport .pp-title{font-weight:900;font-size:20px;}
+.pp-bar{flex:1;min-width:180px;height:20px;background:#E9EFFA;border-radius:99px;overflow:hidden;}
+.pp-fill{height:100%;width:0%;border-radius:99px;
+  background:linear-gradient(90deg,var(--pink),var(--orange),var(--teal),var(--violet));
+  transition:width .6s cubic-bezier(.2,.8,.2,1);}
+.pp-count{font-weight:900;color:var(--violet);white-space:nowrap;}
+
+/* ===== 票券卡片 ===== */
+.grid{max-width:1080px;margin:0 auto 60px;padding:0 16px;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;}
+.ticket{position:relative;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:hidden;border:3px solid transparent;transition:transform .18s, box-shadow .18s, border-color .18s;
+  display:flex;flex-direction:column;}
+.ticket:hover{transform:translateY(-6px) rotate(-.4deg);box-shadow:0 16px 34px rgba(34,49,92,.2);}
+.ticket .poster{padding:26px 18px 18px;color:#fff;text-align:center;position:relative;}
+.ticket .poster .emoji{font-size:58px;display:block;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25));}
+.ticket .poster .no{position:absolute;top:10px;left:14px;background:rgba(255,255,255,.25);
+  border-radius:99px;padding:2px 12px;font-weight:900;font-size:15px;letter-spacing:.1em;}
+.ticket .certified{position:absolute;top:10px;right:12px;background:var(--gold);color:#4A3200;
+  border-radius:99px;padding:2px 12px;font-weight:900;font-size:15px;display:none;}
+.ticket.done .certified{display:inline-block;animation:pop .5s;}
+@keyframes pop{0%{transform:scale(0);}70%{transform:scale(1.25);}100%{transform:scale(1);}}
+.perf{height:0;border-top:3px dashed rgba(34,49,92,.2);position:relative;margin:0 0;}
+.perf::before,.perf::after{content:"";position:absolute;top:-11px;width:22px;height:22px;border-radius:50%;background:var(--paper);}
+.perf::before{left:-13px;} .perf::after{right:-13px;}
+.ticket .body{padding:16px 20px 20px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.ticket h3{font-size:22px;font-weight:900;line-height:1.4;}
+.ticket .en{font-size:16px;color:#5A6A9C;font-style:italic;}
+.ticket .tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{font-size:14px;font-weight:800;padding:2px 12px;border-radius:99px;background:#EEF3FF;color:#3B4B85;}
+.ticket .open-btn{margin-top:auto;border:none;border-radius:14px;padding:12px;font-size:18px;font-weight:900;
+  color:#fff;letter-spacing:.15em;transition:filter .15s;}
+.ticket .open-btn:hover{filter:brightness(1.1);}
+
+/* ===== 詳細視窗 ===== */
+.overlay{position:fixed;inset:0;background:rgba(20,28,58,.55);backdrop-filter:blur(4px);
+  display:none;z-index:50;overflow-y:auto;padding:24px 12px;}
+.overlay.show{display:block;}
+.sheet{max-width:860px;margin:0 auto;background:#fff;border-radius:24px;overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);animation:rise .3s ease-out;}
+@keyframes rise{from{transform:translateY(28px);opacity:0;}to{transform:none;opacity:1;}}
+.sheet-head{padding:26px 24px 20px;color:#fff;position:relative;}
+.sheet-head .emoji{font-size:56px;float:left;margin-right:16px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25));}
+.sheet-head h2{font-size:clamp(24px,4vw,32px);font-weight:900;line-height:1.35;}
+.sheet-head .en{font-style:italic;opacity:.9;font-size:18px;}
+.sheet-head .meta{clear:both;padding-top:10px;font-size:16px;opacity:.92;}
+.close-x{position:absolute;top:14px;right:14px;width:44px;height:44px;border:none;border-radius:50%;
+  background:rgba(255,255,255,.25);color:#fff;font-size:22px;font-weight:900;line-height:1;}
+.close-x:hover{background:rgba(255,255,255,.45);}
+
+.tabs{display:flex;flex-wrap:wrap;gap:0;background:#F0F4FE;border-bottom:3px solid #E1E8F8;}
+.tab-btn{flex:1;min-width:110px;border:none;background:transparent;padding:14px 6px;font-size:17px;font-weight:900;
+  color:#5A6A9C;border-bottom:5px solid transparent;transition:all .15s;}
+.tab-btn .ti{display:block;font-size:24px;}
+.tab-btn.act{color:var(--ink);background:#fff;border-bottom-color:var(--pink);}
+.pane{display:none;padding:26px 26px 34px;}
+.pane.act{display:block;animation:fadein .25s;}
+@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.pane h4{font-size:22px;font-weight:900;margin:18px 0 10px;display:flex;align-items:center;gap:8px;}
+.pane h4::before{content:"";width:10px;height:26px;border-radius:6px;background:var(--pink);}
+.pane p{margin-bottom:12px;}
+.enbox{background:#F4F9FF;border:2px dashed #B9C9EE;border-radius:16px;padding:16px 18px;font-size:18px;color:#33437A;}
+.qlist{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.qlist li{background:#FFF8EC;border-left:8px solid var(--orange);border-radius:12px;padding:12px 16px;}
+.qlist li b{color:#B36A00;}
+.dl-row{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px;}
+.dl-btn{border:none;border-radius:14px;padding:13px 22px;font-size:18px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--teal),#00A38C);box-shadow:0 6px 16px rgba(0,194,168,.35);transition:transform .15s;}
+.dl-btn:hover{transform:translateY(-2px);}
+.dl-btn.alt{background:linear-gradient(135deg,var(--violet),#5C3FE0);box-shadow:0 6px 16px rgba(124,92,255,.35);}
+
+/* 測驗 */
+.quiz-q{background:#F7F5FF;border-radius:16px;padding:16px 18px;margin-bottom:16px;border:2px solid #E4DEFF;}
+.quiz-q .qt{font-weight:900;font-size:19px;margin-bottom:10px;}
+.opts{display:grid;gap:8px;}
+.opt{display:flex;align-items:flex-start;gap:10px;background:#fff;border:2px solid #DCD4FF;border-radius:12px;
+  padding:10px 14px;font-size:18px;transition:all .12s;cursor:pointer;text-align:left;width:100%;}
+.opt:hover{border-color:var(--violet);transform:translateX(3px);}
+.opt.sel{border-color:var(--violet);background:#EFEAFF;font-weight:800;}
+.opt.right{border-color:var(--green);background:#EAF9E5;font-weight:800;}
+.opt.wrong{border-color:var(--red);background:#FFECEA;}
+.opt .ab{font-weight:900;color:var(--violet);flex-shrink:0;}
+.quiz-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px;}
+.submit-btn{border:none;border-radius:14px;padding:13px 26px;font-size:19px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--pink),#E5397A);box-shadow:0 6px 16px rgba(255,93,143,.4);}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+.score-box{font-size:20px;font-weight:900;padding:10px 20px;border-radius:14px;display:none;}
+.score-box.pass{display:inline-block;background:#EAF9E5;color:#1E7A00;border:2px solid var(--green);}
+.score-box.fail{display:inline-block;background:#FFF1DE;color:#A65B00;border:2px solid var(--orange);}
+.stamp{display:none;margin-top:14px;font-size:22px;font-weight:900;color:#B8860B;background:#FFF6D8;
+  border:3px dashed var(--gold);border-radius:16px;padding:12px 18px;text-align:center;}
+.stamp.show{display:block;animation:pop .5s;}
+
+/* 表單 */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid .full{grid-column:1/-1;}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr;}}
+label.fl{display:block;font-weight:900;font-size:17px;margin-bottom:6px;color:#3B4B85;}
+.inp,textarea.inp{width:100%;border:2px solid #C9D6F2;border-radius:12px;padding:11px 14px;background:#FBFDFF;
+  transition:border-color .15s;}
+.inp:focus{outline:none;border-color:var(--blue);background:#fff;}
+textarea.inp{resize:vertical;min-height:110px;}
+.save-hint{font-size:16px;color:#38A700;font-weight:800;display:none;margin-left:8px;}
+.star-row{display:flex;gap:6px;font-size:34px;user-select:none;}
+.star{cursor:pointer;filter:grayscale(1);transition:transform .12s, filter .12s;}
+.star.on{filter:none;transform:scale(1.12);}
+
+/* 頁尾 */
+footer{max-width:1080px;margin:30px auto 40px;text-align:center;color:#6C7BA8;font-size:16px;padding:0 16px;}
+
+/* Confetti */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:99;}
+.confetti-bit{position:absolute;top:-20px;width:12px;height:12px;border-radius:3px;animation:fall linear forwards;}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.9;}}
+
+/* Toast */
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--ink);
+  color:#fff;padding:12px 26px;border-radius:99px;font-weight:900;font-size:17px;opacity:0;transition:all .3s;z-index:120;box-shadow:var(--shadow);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="bulbs"></div>
+  <span class="eyebrow">🎬 楊梅高中圖書館 × 影像閱讀</span>
+  <h1>114年度<span class="hl">公播影片</span>推薦專區</h1>
+  <p>看一部好電影，就像多活了一種人生。<br>完成認證測驗、寫下心得，蒐集你的專屬「觀影護照」！</p>
+  <div class="film-emojis">🎨 📸 🍳 👗 🏛️ 📚 ⏳ 💗</div>
+</header>
+
+<div class="toolbar">
+  <button class="chip on" id="soundChip" onclick="toggleSound()">🔊 音效：開</button>
+  <button class="chip" onclick="shuffleGrid()">🎲 隨機推薦一部</button>
+  <button class="chip" onclick="resetAll()">🧹 清除我的紀錄</button>
+</div>
+
+<div class="passport">
+  <span class="pp-title">🎟️ 我的觀影護照</span>
+  <div class="pp-bar"><div class="pp-fill" id="ppFill"></div></div>
+  <span class="pp-count" id="ppCount">已認證 0 / 11 部</span>
+</div>
+
+<main class="grid" id="grid"></main>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeSheet()">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<div id="confetti"></div>
+<div id="toast"></div>
+
+<footer>
+  ⚠️ 本清單影片均為圖書館合法「公開播映版」授權，僅限校內教育用途放映。<br>
+  楊梅高中圖書館 114年度 影像教育推廣 · 建議使用電腦或平板瀏覽
+</footer>
+
+<script>
+/* ================= 影片資料 ================= */
+const FILMS=[
+{id:"bigeyes",emoji:"👁️",c:"#FF5D8F",zh:"大眼睛",en:"Big Eyes",dir:"提姆·波頓（Tim Burton）",dist:"勁藝多總代理",tags:["藝術","傳記","著作權","勇氣"],
+introZh:"1950年代的美國，畫家瑪格麗特以一雙雙憂鬱的「大眼睛孩子」畫作風靡全國，然而站在鎂光燈前領受掌聲的，卻是宣稱作品出自自己之手的丈夫華特。瑪格麗特在名利與謊言的夾縫中掙扎多年，最終鼓起勇氣走上法庭，奪回屬於自己的名字與創作。本片改編自真實事件，帶我們思考：藝術的價值屬於誰？在不平等的關係中，如何為自己發聲？",
+introEn:"Based on a true story, Big Eyes follows painter Margaret Keane, whose haunting portraits of big-eyed children became a 1950s sensation—under her husband Walter's name. After years of living behind his lies, Margaret finally fights in court to reclaim her art and her identity. The film explores authorship, gender, and the courage to speak the truth.",
+watch:["觀影前：看到「大眼睛的孩子」這樣的畫，你的第一個感覺是什麼？猜猜看畫家想表達什麼？","觀影中：留意瑪格麗特每一次「想說卻沒說出口」的時刻，她的表情和動作透露了什麼？","觀影中：華特是如何一步步把謊言「合理化」的？找出至少兩個他說服別人（或自己）的方式。","觀影後：如果你是瑪格麗特的朋友，在哪個時間點你會勸她站出來？為什麼？","觀影後：法庭上「當場作畫」的一幕為什麼具有說服力？「證明自己」在生活中還有哪些方式？","觀影後：想一想，在班級或社團中，功勞被別人拿走時，你可以怎麼理性地爭取？"],
+quiz:[
+{q:"「大眼睛孩子」系列畫作真正的創作者是誰？",o:["華特·基恩","瑪格麗特·基恩","畫廊老闆","報社記者"],a:1},
+{q:"多年來對外宣稱自己是畫作作者的人是？",o:["瑪格麗特的女兒","美術館館長","瑪格麗特的丈夫華特","瑪格麗特的老師"],a:2},
+{q:"瑪格麗特最後用什麼方式證明自己才是原作者？",o:["提出銷售收據","在法庭上當場作畫","請鄰居作證","公開早期素描本"],a:1},
+{q:"本片最核心的議題是下列哪一項？",o:["創作者的著作權與自我認同","美術館的經營方式","繪畫顏料的發展史","廣告行銷的技巧"],a:0},
+{q:"從瑪格麗特的故事，我們最能學到的態度是？",o:["名氣比作品重要","沉默才能維持家庭和諧","為自己的權益勇敢發聲","作品賣得越多越好"],a:2}]},
+
+{id:"louiswain",emoji:"🐱",c:"#FF9F1C",zh:"天才貓奴畫家",en:"The Electrical Life of Louis Wain",dir:"威爾·夏普（Will Sharpe）",dist:"采昌國際多媒體",tags:["藝術","傳記","愛情","心理健康"],
+introZh:"維多利亞時代的英國畫家路易斯·韋恩，以充滿奇想的貓咪插畫改變了世人看待貓的眼光——在他之前，貓多半只是抓老鼠的工具；在他之後，貓成了千家萬戶疼愛的毛小孩。然而他的一生並不順遂：摯愛的妻子艾蜜莉早逝、家計沉重、晚年更為精神疾病所苦。本片以溫柔幽默的筆調，描繪一位用畫筆對抗孤獨的天才，提醒我們：愛與創作，是穿越人生風暴的電流。",
+introEn:"Louis Wain, an eccentric Victorian artist, transformed how the world saw cats through his whimsical, wide-eyed feline illustrations. Behind the playful drawings lay a life of hardship: the early loss of his beloved wife Emily, financial burdens, and a long struggle with mental illness. Tender and imaginative, the film celebrates love and creativity as the 'electricity' that carries us through life's storms.",
+watch:["觀影前：你覺得「貓」在一百多年前的地位和現在有什麼不同？","觀影中：注意電影中「電流（electricity）」一詞反覆出現，它分別象徵了什麼？","觀影中：艾蜜莉帶給路易斯最重要的一句話或一個觀念是什麼？把它記下來。","觀影後：路易斯筆下的貓，隨著他的人生階段有什麼變化？畫風和心境有關嗎？","觀影後：面對親人生病或離開，電影提供了什麼樣的安慰方式？你認同嗎？","觀影後：如果要用一種動物與畫風代表「現在的你」，你會怎麼畫？"],
+quiz:[
+{q:"路易斯·韋恩最著名的插畫主題是什麼動物？",o:["狗","兔子","貓","狐狸"],a:2},
+{q:"本片的時代背景主要在哪個國家？",o:["法國","英國","美國","日本"],a:1},
+{q:"路易斯深愛的妻子名叫什麼？",o:["瑪格麗特","艾蜜莉","露西","安娜"],a:1},
+{q:"路易斯的畫作對社會帶來什麼影響？",o:["讓更多人喜愛貓、把貓當作家人","讓攝影取代繪畫","推動博物館免費開放","讓報紙停止刊登插畫"],a:0},
+{q:"電影中不斷出現的「電流」最主要象徵什麼？",o:["工業革命的機器","愛與生命中流動的美好力量","城市的路燈","科學實驗的危險"],a:1}]},
+
+{id:"asada",emoji:"📸",c:"#00C2A8",zh:"淺田家！",en:"The Asadas",dir:"中野量太",dist:"采昌",tags:["家庭","攝影","日本","震災"],
+introZh:"攝影師淺田政志有個奇妙的創作習慣：他讓全家人一起「角色扮演」——消防員、賽車手、拉麵店老闆……用鏡頭記錄一家人「如果人生重來」的模樣，並以攝影集《淺田家》榮獲日本攝影界大獎。2011年東日本大震災後，他前往災區擔任志工，協助清洗、整理被海嘯沖散的家庭照片，讓一張張泛黃的相片重新回到主人手中。本片笑中帶淚，訴說「照片」為什麼是一個家最珍貴的寶物。",
+introEn:"Photographer Masashi Asada has a playful habit: he stages family portraits in which everyone role-plays—firefighters, racers, ramen chefs—capturing the lives they might have lived. His album 'Asadake' wins a top photography award. After the 2011 Tohoku earthquake, Masashi volunteers in the disaster zone, washing and returning photographs swept away by the tsunami. Funny and deeply moving, the film asks why a single photo can hold an entire family's love.",
+watch:["觀影前：翻翻你的手機或家中相簿，哪一張全家福讓你印象最深？為什麼？","觀影中：淺田家每一張「角色扮演」照片背後，其實是誰的夢想？","觀影中：在災區，志工們為什麼堅持清洗每一張照片？居民領回照片時的反應是什麼？","觀影後：政志的攝影從「拍自己家」到「為別人的家服務」，他的想法有什麼轉變？","觀影後：數位時代照片隨手可得，本片如何說服你「一張實體照片」仍然珍貴？","觀影後：設計一張你們家的「淺田家式」全家福：主題、場景、每個人的角色是什麼？"],
+quiz:[
+{q:"淺田政志的攝影集最大的特色是什麼？",o:["拍攝野生動物","全家人一起角色扮演拍照","只拍黑白風景","水下攝影"],a:1},
+{q:"2011年發生了什麼事件，改變了政志的攝影之路？",o:["東日本大震災","奧運在東京舉行","火山爆發","攝影展失火"],a:0},
+{q:"政志在災區主要協助什麼志工工作？",o:["搭建臨時住宅","煮飯給災民","清洗與歸還被沖散的照片","修理相機"],a:2},
+{q:"本片中「照片」最重要的意義是？",o:["炫耀生活","保存一家人的回憶與愛","證明攝影技術","賺取獎金"],a:1},
+{q:"淺田家的全家福之所以動人，是因為？",o:["使用昂貴器材","家人願意一起認真「演出」彼此的夢想","背景風景漂亮","照片尺寸很大"],a:1}]},
+
+{id:"dali",emoji:"🍳",c:"#7C5CFF",zh:"與達利有約",en:"A Chef for Dalí",dir:"大衛·普約爾（David Pujol）",dist:"天馬行空數位有限公司",tags:["紀錄片","藝術","美食","超現實主義"],
+introZh:"超現實主義大師薩爾瓦多·達利，不只畫出融化的時鐘，更把「吃」變成一場藝術演出。本紀錄片透過曾為達利掌廚的主廚視角，走進西班牙海邊小鎮利加特港，重現大師餐桌上的奇想盛宴：龍蝦、海膽、誇張的宴會與源源不絕的靈感。藝術與料理在此交會——原來創意不只掛在美術館牆上，也能盛在盤子裡。看完你會發現：生活中每一餐，都可以是一件作品。",
+introEn:"Surrealist master Salvador Dalí didn't just paint melting clocks—he turned eating into performance art. Told through the eyes of the chef who once cooked for him, this documentary revisits the seaside village of Port Lligat, Spain, recreating the fantastical feasts of the master's table. Art and cuisine meet: creativity doesn't only hang on museum walls; it can be served on a plate. Every meal can be a work of art.",
+watch:["觀影前：如果請一位藝術家設計一頓晚餐，你猜餐桌上會出現什麼？","觀影中：記下至少兩道達利餐桌上令你驚訝的料理或擺盤方式。","觀影中：主廚眼中的達利，和課本、美術館裡的達利有什麼不同？","觀影後：達利說過類似「美食也是藝術」的觀念，你認同嗎？舉一個台灣料理的例子說明。","觀影後：「超現實主義」的精神如何同時出現在達利的畫和他的餐桌上？","觀影後：替班上設計一場「超現實主題午餐」：菜名、擺盤、用餐規則會是什麼？"],
+quiz:[
+{q:"達利是哪一個藝術流派的代表人物？",o:["印象派","立體派","超現實主義","普普藝術"],a:2},
+{q:"達利的國籍是？",o:["法國","西班牙","義大利","墨西哥"],a:1},
+{q:"本片主要透過誰的視角認識達利？",o:["美術館館長","曾為達利掌廚的主廚","達利的妻子","記者"],a:1},
+{q:"達利最廣為人知的畫作元素是？",o:["融化的時鐘","星空與麥田","藍色時期的人像","罐頭湯"],a:0},
+{q:"本片想傳達的核心觀念是？",o:["料理必須昂貴才有價值","藝術與生活（料理）可以互相結合","畫家不應該浪費時間吃飯","餐廳比美術館重要"],a:1}]},
+
+{id:"ando",emoji:"🏛️",c:"#2D9CDB",zh:"遇見藝術大師系列1：在直島遇見安藤忠雄",en:"Tadao Ando | Naoshima",dir:"巴拉",dist:"天馬行空",tags:["紀錄片","建築","日本","自學成才"],
+introZh:"日本建築大師安藤忠雄沒有讀過建築科系，年輕時甚至當過職業拳擊手，卻靠著自學與旅行中對空間的觀察，成為普立茲克建築獎得主。本片帶我們前往瀨戶內海的「藝術之島」直島，走進他設計的地中美術館與貝樂思之家：清水混凝土的沉靜、光影在牆面上的流動、建築與海島地景的對話。看完你會理解——建築不只是蓋房子，而是為「光、風與人」設計相遇的場所。",
+introEn:"Japanese architect Tadao Ando never studied architecture formally—he was once a professional boxer—yet through self-teaching and travel he became a Pritzker Prize laureate. This documentary visits Naoshima, the 'art island' in the Seto Inland Sea, exploring his Chichu Art Museum and Benesse House: quiet exposed concrete, light drifting across walls, architecture in dialogue with the island landscape. Architecture, we learn, is designing places where light, wind, and people meet.",
+watch:["觀影前：想到「美術館」你腦中浮現什麼樣的建築？必須是宏偉的大樓嗎？","觀影中：注意「光」在安藤建築中出現的方式：從哪裡進來？照在什麼材質上？","觀影中：地中美術館為什麼要「埋進地底」？這和保護島嶼景觀有什麼關係？","觀影後：安藤沒有建築文憑卻成為大師，他靠的是哪些具體行動？對你的學習有什麼啟發？","觀影後：清水混凝土看起來「樸素」，為什麼反而讓藝術品和自然更突出？","觀影後：替你的學校選一個角落，用安藤的理念（光、風、簡潔）重新設計它。"],
+quiz:[
+{q:"安藤忠雄的職業是？",o:["畫家","建築師","雕塑家","攝影師"],a:1},
+{q:"關於安藤忠雄的學習歷程，下列何者正確？",o:["畢業於東京大學建築系","留學法國學設計","靠自學成為建築師，年輕時曾是拳擊手","從小在建築事務所長大"],a:2},
+{q:"安藤忠雄最具代表性的建築材料是？",o:["紅磚","木材","清水混凝土","彩色玻璃"],a:2},
+{q:"直島位於日本的哪個海域，以什麼聞名？",o:["瀨戶內海，以藝術聞名","日本海，以溫泉聞名","太平洋，以衝浪聞名","東京灣，以夜景聞名"],a:0},
+{q:"地中美術館的最大特色是？",o:["全館使用金色裝飾","建築大部分埋入地下，與地景融合","是世界最高的美術館","完全用木頭搭建"],a:1}]},
+
+{id:"ysl",emoji:"👗",c:"#F25C54",zh:"遇見藝術大師系列4：在馬拉喀什遇見聖羅蘭",en:"Yves Saint-Laurent | Marrakesh",dir:"伊薩",dist:"天馬行空",tags:["紀錄片","時尚","色彩","摩洛哥"],
+introZh:"時尚大師伊夫·聖羅蘭（YSL）的設計為什麼充滿大膽的色彩？答案藏在北非摩洛哥的古城馬拉喀什。本片走訪他鍾愛的第二個家：湛藍的馬若雷勒花園、市集裡繽紛的織品與香料、北非強烈的陽光與色塊。聖羅蘭曾說，是馬拉喀什教會了他「顏色」。從巴黎的高級訂製服到異國街角的靈感採集，本片是一堂關於「觀察力」的美學課：偉大的創意，往往來自你願意換一個地方看世界。",
+introEn:"Why are Yves Saint-Laurent's designs so fearless with color? The answer lies in Marrakesh, Morocco. This documentary visits the designer's beloved second home: the cobalt-blue Majorelle Garden, souks bursting with textiles and spices, and North Africa's brilliant light. Saint-Laurent said Marrakesh taught him color. From Paris haute couture to inspiration gathered in foreign streets, the film is a lesson in observation: great creativity often begins when you see the world from somewhere new.",
+watch:["觀影前：打開衣櫃看看，你最常穿的顏色是什麼？你覺得「配色」需要學習嗎？","觀影中：找出三種馬拉喀什的「顏色來源」（例如：花園、市集、建築、服飾）。","觀影中：聖羅蘭在馬拉喀什的生活方式，與他在巴黎工作時有什麼不同？","觀影後：為什麼「換一個環境」常常能帶來新的創意？你有過類似經驗嗎？","觀影後：馬若雷勒花園的藍色為什麼令人難忘？查查看它甚至有專屬的名字。","觀影後：用「台灣的顏色」設計一個系列：你會選哪三種顏色？靈感分別來自哪裡？"],
+quiz:[
+{q:"伊夫·聖羅蘭（YSL）是哪個領域的大師？",o:["建築","時尚設計","雕塑","電影配樂"],a:1},
+{q:"馬拉喀什位於哪一個國家？",o:["埃及","土耳其","摩洛哥","西班牙"],a:2},
+{q:"聖羅蘭在馬拉喀什鍾愛、以湛藍色聞名的地方是？",o:["馬若雷勒花園","藍色清真寺","撒哈拉綠洲","地中美術館"],a:0},
+{q:"馬拉喀什帶給聖羅蘭最重要的設計啟發是？",o:["剪裁技術","大膽的色彩運用","布料防水處理","服裝行銷策略"],a:1},
+{q:"本片給創作者最重要的提醒是？",o:["靈感只能來自書本","待在工作室越久越好","換個環境觀察世界，能帶來新的創意","模仿名牌就能成功"],a:2}]},
+
+{id:"malala",emoji:"📚",c:"#38B000",zh:"馬拉拉：改變世界的力量",en:"He Named Me Malala",dir:"戴維斯·古根漢（Davis Guggenheim）",dist:"影傑公播發行",tags:["紀錄片","教育","人權","諾貝爾獎"],
+introZh:"巴基斯坦少女馬拉拉，因公開主張「女孩也有受教育的權利」而遭塔利班槍擊，奇蹟康復後，她沒有選擇沉默，反而站上聯合國講台，成為史上最年輕的諾貝爾和平獎得主。本片記錄她與家人流亡英國後的日常：她是改變世界的倡議者，也是一個會為考試煩惱、和弟弟鬥嘴的普通女孩。「一個孩子、一位老師、一本書、一枝筆，就可以改變世界。」——看完這部片，你會重新思考「上學」這件理所當然的事。",
+introEn:"Malala Yousafzai, a Pakistani teenager, was shot by the Taliban for insisting that girls have the right to go to school. Surviving against the odds, she chose to speak even louder—addressing the United Nations and becoming the youngest Nobel Peace Prize laureate. The film follows her family's life in exile in England, where the world-changing activist is also an ordinary girl who worries about exams and teases her brothers. 'One child, one teacher, one book, one pen can change the world.'",
+watch:["觀影前：如果明天開始「不准上學」，你的生活會失去什麼？列出三項。","觀影中：馬拉拉的父親在她的成長中扮演什麼角色？「他為她命名」有什麼含意？","觀影中：注意馬拉拉「公眾演說」與「在家生活」兩種樣貌的對比，導演為什麼要這樣安排？","觀影後：馬拉拉遭受攻擊後為什麼選擇「更大聲地說話」而不是沉默？","觀影後：她說「一個孩子、一位老師、一本書、一枝筆，可以改變世界」，你如何解讀？","觀影後：在台灣，教育資源也並非完全平等。找一個例子，想想高中生可以做什麼？"],
+quiz:[
+{q:"馬拉拉來自哪一個國家？",o:["印度","巴基斯坦","阿富汗","孟加拉"],a:1},
+{q:"馬拉拉主要倡議的議題是？",o:["環境保護","女孩的受教育權","動物權益","網路自由"],a:1},
+{q:"馬拉拉獲得了哪一項榮譽？",o:["奧斯卡最佳紀錄片","史上最年輕的諾貝爾和平獎得主","普立茲克獎","葛萊美獎"],a:1},
+{q:"馬拉拉的名言是：「一個孩子、一位老師、一本書、一枝筆，就可以＿＿＿＿。」",o:["賺很多錢","改變世界","考上大學","環遊世界"],a:1},
+{q:"遭受攻擊康復後，馬拉拉選擇的行動是？",o:["隱居不再發言","繼續更勇敢地為教育發聲","放棄學業","搬回家鄉務農"],a:1}]},
+
+{id:"abouttime",emoji:"⏳",c:"#E76BA0",zh:"真愛每一天",en:"About Time",dir:"理查·寇蒂斯（Richard Curtis）",dist:"影傑",tags:["劇情","家庭","時間","珍惜當下"],
+introZh:"提姆在21歲那年得知家族秘密：家裡的男人可以回到過去、重新來過。他用這個能力追求愛情、修補尷尬、彌補遺憾，卻漸漸發現時光旅行有其代價與極限——有些人、有些時刻，一旦錯過就無法回頭。父親臨別前教他最後的秘訣：把每一天過兩次，第一次緊張匆忙，第二次細細品味。而提姆最終領悟到更深一層：根本不必重來，只要認真地、感恩地過好「僅此一次」的每一天。",
+introEn:"At 21, Tim learns a family secret: the men in his family can travel back in time. He uses the gift to win love, fix awkward moments, and undo regrets—only to discover that time travel has limits and costs. His father's final advice: live each day twice—once with all its tension, once savoring its sweetness. In the end, Tim learns something deeper: we don't need a second take at all, only to live each unrepeatable day with attention and gratitude.",
+watch:["觀影前：如果可以回到過去改變一件事，你會選哪件？改變它可能有什麼代價？","觀影中：提姆每一次使用時光旅行，動機有什麼變化？（從自己→到＿＿）","觀影中：父親教提姆的「過兩次」秘訣是什麼？電影用哪些畫面呈現差別？","觀影後：為什麼提姆最後決定「不再回到過去」？你認同他的選擇嗎？","觀影後：電影中哪一段「平凡的日常」最打動你？為什麼平凡反而動人？","觀影後：設計你的「把今天過好」三步驟，明天實際執行一天，記錄感受。"],
+quiz:[
+{q:"提姆家族的男性擁有什麼特殊能力？",o:["預知未來","回到過去的時光旅行","隱形","讀心術"],a:1},
+{q:"提姆的能力是誰告訴他的？",o:["母親","父親","爺爺","妹妹"],a:1},
+{q:"父親傳授的幸福秘訣是？",o:["努力賺錢","把每一天過兩次，第二次好好品味","永遠不要犯錯","盡量改變過去"],a:1},
+{q:"提姆最終領悟的人生態度是？",o:["不斷重來直到完美","認真珍惜僅此一次的每一天","避免與人建立感情","依賴超能力解決問題"],a:1},
+{q:"本片除了愛情，最重要的情感主軸是？",o:["同學競爭","父子親情與家庭","職場升遷","偵探解謎"],a:1}]},
+
+{id:"wanderingchef",emoji:"🍲",c:"#FFB020",zh:"盡孝的滋味",en:"The Wandering Chef",dir:"朴惠鈴",dist:"飛行國際",tags:["紀錄片","料理","孝親","感恩"],
+introZh:"韓國「流浪廚師」林知豪走遍山林海濱，採集大自然的食材，做出一道道質樸而深情的料理。他心中始終懷著對母親的思念，也感念曾如母親般照顧他的恩人奶奶。為了報答與紀念這份如親的恩情，他以十年的採集與功夫，準備了一場一百零八道菜的盛宴——每一道菜，都是一句說不出口的「謝謝」與「我想你」。本片讓我們看見：料理最動人的調味料，是心意；盡孝，永遠要及時。",
+introEn:"Korean 'wandering chef' Im Ji-ho roams mountains and coastlines, foraging wild ingredients to create humble, heartfelt dishes. He carries a lifelong longing for his mother, and deep gratitude to an elderly woman who cared for him like a son. To honor that love, he prepares an extraordinary memorial feast of 108 dishes—each one an unspoken 'thank you' and 'I miss you.' The film reminds us that the most moving seasoning is sincerity, and that gratitude should never wait.",
+watch:["觀影前：家人做過哪一道菜讓你一想到就覺得溫暖？它有什麼故事？","觀影中：林知豪如何「認識」食材？他對待自然的態度給你什麼感覺？","觀影中：他與奶奶相處的片段中，哪一幕最觸動你？記下當時的對話或動作。","觀影後：為什麼他選擇用「一百零八道菜」來表達感謝與思念？","觀影後：「盡孝要及時」，電影如何傳達這個訊息？","觀影後：這週為家人做一件具體的事（做一道菜、寫一張卡片、認真陪伴一小時），記錄過程與家人的反應。"],
+quiz:[
+{q:"本片的主角林知豪來自哪個國家？",o:["日本","韓國","泰國","越南"],a:1},
+{q:"他被稱為「流浪廚師」的原因是？",o:["沒有餐廳願意僱用他","走遍各地採集天然食材做菜","只在夜市擺攤","專門環遊世界比賽"],a:1},
+{q:"他籌備盛大筵席，主要是為了？",o:["參加電視比賽","開設新餐廳","報答並紀念如母親般的恩人","慶祝自己生日"],a:2},
+{q:"那場筵席總共準備了多少道菜？",o:["12道","50道","108道","365道"],a:2},
+{q:"本片最想傳達的訊息是？",o:["高級食材才能做出美味","盡孝與感恩要及時，心意是最好的調味","廚師必須到國外學藝","吃素比吃肉健康"],a:1}]},
+
+{id:"chef",emoji:"🚚",c:"#00A6ED",zh:"五星主廚快餐車",en:"Chef",dir:"強·法夫洛（Jon Favreau）",dist:"威望國際",tags:["劇情","料理","親子","熱情"],
+introZh:"名廚卡爾在洛杉磯高級餐廳掌廚，卻因菜單受限而失去創作靈魂，一場與美食評論家的網路罵戰讓他丟了工作、顏面盡失。跌到谷底的他，買下一輛破舊快餐車，帶著兒子與老搭檔從邁阿密一路開回洛杉磯，賣起熱騰騰的古巴三明治。沒有米其林的光環，卻找回了做菜的初心，也找回了與兒子相處的時光。這是一部關於「重新出發」的電影：熱情所在之處，就是你的五星舞台。",
+introEn:"Carl Casper, head chef at a fancy Los Angeles restaurant, loses his creative spark under a rigid menu—then loses his job after a viral feud with a food critic. Hitting bottom, he buys a battered food truck and drives from Miami back to L.A. with his son and best friend, selling sizzling Cuban sandwiches along the way. Without Michelin glamour, he rediscovers his love of cooking—and his relationship with his son. A film about starting over: wherever your passion is, that's your five-star stage.",
+watch:["觀影前：你有沒有一件「本來很喜歡、後來變得有壓力」的事？發生了什麼？","觀影中：卡爾在高級餐廳和在快餐車上做菜的神情有什麼不同？找出對比的畫面。","觀影中：注意「社群媒體」在片中的兩面性：它如何毀掉卡爾？又如何幫助他？","觀影後：兒子波西在旅程中學到什麼？卡爾又從兒子身上學到什麼？","觀影後：「一份簡單的古巴三明治」為什麼能勝過高級料理？關鍵是什麼？","觀影後：想一件你想「重新出發」的事，寫下你的第一步行動。"],
+quiz:[
+{q:"卡爾失去餐廳工作的導火線是？",o:["偷竊食材","與美食評論家在網路上爆發罵戰","餐廳倒閉","健康檢查不合格"],a:1},
+{q:"卡爾重新出發的方式是？",o:["開一間新餐廳","經營快餐車","改行當評論家","參加料理比賽"],a:1},
+{q:"快餐車上的招牌料理是？",o:["古巴三明治","拉麵","披薩","牛肉麵"],a:0},
+{q:"這趟快餐車之旅，卡爾最大的收穫除了熱情，還有？",o:["賺到一大筆錢","修復與兒子的關係","學會新語言","獲得米其林星星"],a:1},
+{q:"本片想告訴我們什麼？",o:["名氣與排場最重要","找回初心與熱情，就能重新出發","網路評論不可相信","餐廳越貴越好吃"],a:1}]},
+
+{id:"barbie",emoji:"💗",c:"#FF3E96",zh:"芭比",en:"Barbie",dir:"葛莉塔·潔薇（Greta Gerwig）",dist:"威翰文創",tags:["喜劇","性別","自我認同","成長"],
+introZh:"在完美無瑕的「芭比樂園」裡，每一天都是最棒的一天——直到「典型芭比」突然開始思考死亡、腳跟落地，她只好前往真實世界尋找答案，肯尼也一路跟隨。真實世界卻和樂園完全相反：她發現這裡並不完美，也發現「完美」本身或許就是個問題。本片用粉紅色的幽默包裹嚴肅的思考：性別的刻板印象從何而來？「做自己」到底是什麼意思？當芭比最後做出選擇，你也會問自己——我想成為什麼樣的人？",
+introEn:"In flawless Barbie Land, every day is the best day ever—until Stereotypical Barbie starts thinking about death and her heels touch the ground. To find answers she journeys to the Real World, with Ken tagging along, only to discover a place that's nothing like her pink utopia—and to realize that 'perfection' itself may be the problem. Wrapped in pink humor, the film asks serious questions: Where do gender stereotypes come from? What does it really mean to be yourself? Barbie's final choice will make you ask: who do I want to become?",
+watch:["觀影前：說到「芭比娃娃」你會聯想到哪些形容詞？這些印象是從哪裡來的？","觀影中：「芭比樂園」和「真實世界」有哪些刻意設計的相反之處？至少找出三組對比。","觀影中：肯尼到了真實世界後發生什麼轉變？他的轉變想諷刺什麼現象？","觀影後：葛洛莉亞那段「當女性太難了」的獨白，哪一句最有共鳴？男生聽了有什麼想法？","觀影後：芭比最後為什麼選擇成為人類？「不完美但真實」的人生哪裡吸引她？","觀影後：找一個生活中的性別刻板印象（廣告、玩具、職業……），提出你的觀察與翻轉方式。"],
+quiz:[
+{q:"本片的導演是誰？",o:["葛莉塔·潔薇","提姆·波頓","強·法夫洛","中野量太"],a:0},
+{q:"芭比離開芭比樂園的原因是？",o:["被驅逐出境","開始思考死亡、身體出現變化，必須到真實世界找答案","要參加選美比賽","去尋找失散的家人"],a:1},
+{q:"與芭比一同前往真實世界的角色是？",o:["愛麗絲","肯尼","葛洛莉亞","美泰兒總裁"],a:1},
+{q:"本片探討的核心議題是？",o:["外星生物入侵","性別刻板印象與自我認同","股票投資","古代歷史戰爭"],a:1},
+{q:"電影結尾，芭比做出什麼選擇？",o:["回到芭比樂園當女王","選擇成為真實的人類","變成人魚","搬到月球"],a:1}]}
+];
+
+/* ================= 音效（Web Audio） ================= */
+let soundOn=true, actx=null;
+function ac(){ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended")actx.resume(); return actx; }
+function tone(f,t,dur,type="sine",vol=0.16,when=0){
+  if(!soundOn)return;
+  try{ const c=ac(),o=c.createOscillator(),g=c.createGain();
+  o.type=type;o.frequency.value=f;o.connect(g);g.connect(c.destination);
+  const s=c.currentTime+when; g.gain.setValueAtTime(0.0001,s);
+  g.gain.exponentialRampToValueAtTime(vol,s+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,s+dur);
+  o.start(s);o.stop(s+dur+0.05);}catch(e){}
+}
+const sfx={
+  click:()=>tone(660,0,.09,"triangle",.12),
+  flip:()=>{tone(440,0,.07,"sine",.1);tone(587,0,.09,"sine",.1,.06);},
+  select:()=>tone(520,0,.08,"square",.07),
+  right:()=>{tone(523,0,.12,"sine",.15);tone(659,0,.12,"sine",.15,.1);tone(784,0,.2,"sine",.15,.2);},
+  wrong:()=>{tone(200,0,.22,"sawtooth",.1);tone(150,0,.25,"sawtooth",.1,.12);},
+  fanfare:()=>{[523,659,784,1047].forEach((f,i)=>tone(f,0,.28,"triangle",.16,i*.14));tone(1319,0,.5,"triangle",.14,.6);},
+  dl:()=>{tone(880,0,.08,"sine",.12);tone(1175,0,.14,"sine",.12,.07);},
+  save:()=>{tone(700,0,.09,"sine",.12);tone(880,0,.12,"sine",.12,.08);}
+};
+function toggleSound(){
+  soundOn=!soundOn;
+  const b=document.getElementById("soundChip");
+  b.textContent=soundOn?"🔊 音效：開":"🔇 音效：關";
+  b.classList.toggle("on",soundOn);
+  if(soundOn)sfx.click();
+}
+
+/* ================= 儲存 ================= */
+const store={
+  get(k,d){ try{const v=localStorage.getItem("pubfilm_"+k);return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ try{localStorage.setItem("pubfilm_"+k,JSON.stringify(v));}catch(e){} },
+  del(k){ try{localStorage.removeItem("pubfilm_"+k);}catch(e){} }
+};
+
+/* ================= 渲染卡片 ================= */
+const grid=document.getElementById("grid");
+function renderGrid(order){
+  grid.innerHTML="";
+  (order||FILMS).forEach((f,idx)=>{
+    const done=store.get("cert_"+f.id,null);
+    const card=document.createElement("article");
+    card.className="ticket"+(done&&done.pass?" done":"");
+    card.style.borderColor=f.c;
+    card.innerHTML=`
+      <div class="poster" style="background:linear-gradient(135deg,${f.c},${f.c}CC)">
+        <span class="no">NO.${String(FILMS.indexOf(f)+1).padStart(2,"0")}</span>
+        <span class="certified">✅ 已認證</span>
+        <span class="emoji">${f.emoji}</span>
+      </div>
+      <div class="perf"></div>
+      <div class="body">
+        <h3>${f.zh}</h3>
+        <div class="en">${f.en}</div>
+        <div class="tags">${f.tags.map(t=>`<span class="tag">#${t}</span>`).join("")}</div>
+        <button class="open-btn" style="background:${f.c}">🎟️ 入場觀看</button>
+      </div>`;
+    card.querySelector(".open-btn").onclick=()=>{sfx.flip();openSheet(f.id);};
+    grid.appendChild(card);
+  });
+  updatePassport();
+}
+function shuffleGrid(){
+  sfx.click();
+  const pick=FILMS[Math.floor(Math.random()*FILMS.length)];
+  toast(`🎲 今日推薦：《${pick.zh}》！`);
+  openSheet(pick.id);
+}
+function updatePassport(){
+  const n=FILMS.filter(f=>{const c=store.get("cert_"+f.id,null);return c&&c.pass;}).length;
+  document.getElementById("ppFill").style.width=(n/FILMS.length*100)+"%";
+  document.getElementById("ppCount").textContent=`已認證 ${n} / ${FILMS.length} 部`;
+}
+function resetAll(){
+  if(!confirm("確定要清除所有測驗紀錄、推薦與心得草稿嗎？"))return;
+  FILMS.forEach(f=>{["cert_","rec_","ref_"].forEach(p=>store.del(p+f.id));});
+  sfx.click(); renderGrid(); toast("🧹 已清除所有紀錄");
+}
+
+/* ================= 詳細視窗 ================= */
+const overlay=document.getElementById("overlay"), sheet=document.getElementById("sheet");
+let curFilm=null, quizSel=[];
+
+function openSheet(id){
+  curFilm=FILMS.find(f=>f.id===id);
+  quizSel=new Array(5).fill(-1);
+  const f=curFilm;
+  const rec=store.get("rec_"+f.id,{}), ref=store.get("ref_"+f.id,{});
+  const cert=store.get("cert_"+f.id,null);
+  sheet.innerHTML=`
+  <div class="sheet-head" style="background:linear-gradient(135deg,${f.c},${f.c}CC)">
+    <button class="close-x" onclick="closeSheet()" aria-label="關閉">✕</button>
+    <span class="emoji">${f.emoji}</span>
+    <h2>${f.zh}</h2>
+    <div class="en">${f.en}</div>
+    <div class="meta">🎬 導演／作者：${f.dir}　｜　📀 發行：${f.dist}　｜　${f.tags.map(t=>"#"+t).join("　")}</div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn act" data-p="intro"><span class="ti">📖</span>介紹單</button>
+    <button class="tab-btn" data-p="study"><span class="ti">🔍</span>學習單</button>
+    <button class="tab-btn" data-p="quiz"><span class="ti">🏅</span>認證單</button>
+    <button class="tab-btn" data-p="rec"><span class="ti">📣</span>推薦單</button>
+    <button class="tab-btn" data-p="ref"><span class="ti">💭</span>心得單</button>
+  </div>
+
+  <section class="pane act" id="p-intro">
+    <h4>中文介紹</h4>
+    <p>${f.introZh}</p>
+    <h4>English Introduction</h4>
+    <div class="enbox">${f.introEn}</div>
+    <div class="dl-row"><button class="dl-btn" onclick="dlIntro()">⬇️ 下載介紹單（Word）</button></div>
+  </section>
+
+  <section class="pane" id="p-study">
+    <h4>閱讀與欣賞指導</h4>
+    <p>請依「觀影前 → 觀影中 → 觀影後」三個階段，帶著問題看電影，你會看見更多細節！</p>
+    <ol class="qlist">${f.watch.map((w,i)=>{const m=w.match(/^(觀影[前中後])：(.*)$/);return `<li><b>${i+1}. ${m?m[1]:"思考"}</b>｜${m?m[2]:w}</li>`;}).join("")}</ol>
+    <div class="dl-row"><button class="dl-btn" onclick="dlStudy()">⬇️ 下載學習單（Word）</button></div>
+  </section>
+
+  <section class="pane" id="p-quiz">
+    <h4>觀影認證測驗（共 5 題）</h4>
+    <p>答對 <b>4 題以上</b> 即可獲得本片「觀影認證章」🏅${cert?`（上次成績：${cert.score}／5${cert.pass?"，已通過 ✅":""}）`:""}</p>
+    <div id="quizBox">${f.quiz.map((q,qi)=>`
+      <div class="quiz-q">
+        <div class="qt">Q${qi+1}. ${q.q}</div>
+        <div class="opts">${q.o.map((o,oi)=>`
+          <button class="opt" data-q="${qi}" data-o="${oi}"><span class="ab">${"ABCD"[oi]}.</span><span>${o}</span></button>`).join("")}
+        </div>
+      </div>`).join("")}
+    </div>
+    <div class="quiz-actions">
+      <button class="submit-btn" id="quizSubmit" disabled onclick="gradeQuiz()">📤 送出答案</button>
+      <span class="score-box" id="scoreBox"></span>
+    </div>
+    <div class="stamp" id="stampBox">🏅 恭喜通過《${f.zh}》觀影認證！已蓋章收進你的觀影護照！</div>
+    <div class="dl-row"><button class="dl-btn" onclick="dlQuiz()">⬇️ 下載認證單（Word）</button></div>
+  </section>
+
+  <section class="pane" id="p-rec">
+    <h4>📣 我是最佳代言人</h4>
+    <p>看完覺得超讚？填寫推薦單，向全校同學代言這部片！（內容會自動暫存在這台裝置）</p>
+    <div class="form-grid">
+      <div><label class="fl" for="recName">代言人姓名</label><input class="inp" id="recName" value="${esc(rec.name)}" placeholder="你的名字"></div>
+      <div><label class="fl" for="recClass">班級</label><input class="inp" id="recClass" value="${esc(rec.cls)}" placeholder="例：二年三班"></div>
+      <div class="full"><label class="fl">推薦指數</label>
+        <div class="star-row" id="starRow">${[1,2,3,4,5].map(i=>`<span class="star${(rec.stars||0)>=i?" on":""}" data-s="${i}">⭐</span>`).join("")}</div>
+      </div>
+      <div class="full"><label class="fl" for="recSlogan">一句話推薦金句（想像它會印在海報上！）</label>
+        <input class="inp" id="recSlogan" value="${esc(rec.slogan)}" placeholder="例：這部片讓我笑著笑著就哭了……"></div>
+      <div class="full"><label class="fl" for="recWhy">推薦理由（推薦給誰看？為什麼非看不可？）</label>
+        <textarea class="inp" id="recWhy" placeholder="寫下你想代言的理由……">${esc(rec.why)}</textarea></div>
+    </div>
+    <div class="dl-row">
+      <button class="dl-btn alt" onclick="saveRec()">💾 暫存推薦內容<span class="save-hint" id="recHint">已儲存 ✔</span></button>
+      <button class="dl-btn" onclick="dlRec()">⬇️ 下載推薦單（Word）</button>
+    </div>
+  </section>
+
+  <section class="pane" id="p-ref">
+    <h4>💭 觀影心得與省思</h4>
+    <p>電影結束後，留三分鐘給自己。誠實地寫，沒有標準答案。（內容會自動暫存在這台裝置）</p>
+    <div class="form-grid">
+      <div><label class="fl" for="refName">姓名</label><input class="inp" id="refName" value="${esc(ref.name)}" placeholder="你的名字"></div>
+      <div><label class="fl" for="refClass">班級</label><input class="inp" id="refClass" value="${esc(ref.cls)}" placeholder="例：二年三班"></div>
+      <div class="full"><label class="fl" for="refScene">最觸動我的一幕／一句台詞</label>
+        <textarea class="inp" id="refScene" placeholder="描述那個畫面，以及當下你的感受……">${esc(ref.scene)}</textarea></div>
+      <div class="full"><label class="fl" for="refLearn">我的省思與收穫</label>
+        <textarea class="inp" id="refLearn" placeholder="這部片改變或提醒了我什麼？和我的生活有什麼連結？">${esc(ref.learn)}</textarea></div>
+      <div class="full"><label class="fl" for="refAction">看完之後，我想採取的一個小行動</label>
+        <input class="inp" id="refAction" value="${esc(ref.action)}" placeholder="例：這週為家人做一頓飯"></div>
+    </div>
+    <div class="dl-row">
+      <button class="dl-btn alt" onclick="saveRef()">💾 暫存心得內容<span class="save-hint" id="refHint">已儲存 ✔</span></button>
+      <button class="dl-btn" onclick="dlRef()">⬇️ 下載心得單（Word）</button>
+    </div>
+  </section>`;
+
+  sheet.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{
+    sfx.flip();
+    sheet.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("act"));
+    sheet.querySelectorAll(".pane").forEach(x=>x.classList.remove("act"));
+    b.classList.add("act");
+    sheet.querySelector("#p-"+b.dataset.p).classList.add("act");
+  });
+  sheet.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(b.disabled)return;
+    sfx.select();
+    const qi=+b.dataset.q;
+    quizSel[qi]=+b.dataset.o;
+    sheet.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(x=>x.classList.remove("sel"));
+    b.classList.add("sel");
+    document.getElementById("quizSubmit").disabled=quizSel.includes(-1);
+  });
+  const sr=sheet.querySelector("#starRow");
+  if(sr)sr.querySelectorAll(".star").forEach(s=>s.onclick=()=>{
+    sfx.select();
+    const v=+s.dataset.s;
+    sr.dataset.val=v;
+    sr.querySelectorAll(".star").forEach(x=>x.classList.toggle("on",+x.dataset.s<=v));
+  });
+  if(sr)sr.dataset.val=rec.stars||0;
+
+  overlay.classList.add("show");
+  document.body.style.overflow="hidden";
+}
+function closeSheet(){
+  overlay.classList.remove("show");
+  document.body.style.overflow="";
+  sfx.click();
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&overlay.classList.contains("show"))closeSheet();});
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
+
+/* ================= 測驗批改 ================= */
+function gradeQuiz(){
+  const f=curFilm; let score=0;
+  f.quiz.forEach((q,qi)=>{
+    sheet.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(b=>{
+      b.disabled=true;
+      const oi=+b.dataset.o;
+      if(oi===q.a)b.classList.add("right");
+      else if(oi===quizSel[qi])b.classList.add("wrong");
+    });
+    if(quizSel[qi]===q.a)score++;
+  });
+  const pass=score>=4;
+  const box=document.getElementById("scoreBox");
+  box.textContent=pass?`🎉 得分 ${score}／5，通過認證！`:`💪 得分 ${score}／5，差一點點！重新打開本片可再挑戰。`;
+  box.className="score-box "+(pass?"pass":"fail");
+  document.getElementById("quizSubmit").disabled=true;
+  const prev=store.get("cert_"+f.id,null);
+  if(!prev||score>prev.score||pass)store.set("cert_"+f.id,{score:score,pass:pass||(prev&&prev.pass)||false,at:new Date().toLocaleString("zh-TW")});
+  if(pass){
+    document.getElementById("stampBox").classList.add("show");
+    sfx.fanfare(); confetti(); renderGrid();
+  }else{ sfx.wrong(); }
+}
+
+/* ================= 表單儲存 ================= */
+function saveRec(){
+  const f=curFilm;
+  store.set("rec_"+f.id,{
+    name:val("recName"),cls:val("recClass"),
+    stars:+(sheet.querySelector("#starRow").dataset.val||0),
+    slogan:val("recSlogan"),why:val("recWhy")
+  });
+  flash("recHint"); sfx.save();
+}
+function saveRef(){
+  const f=curFilm;
+  store.set("ref_"+f.id,{
+    name:val("refName"),cls:val("refClass"),
+    scene:val("refScene"),learn:val("refLearn"),action:val("refAction")
+  });
+  flash("refHint"); sfx.save();
+}
+function val(id){const e=document.getElementById(id);return e?e.value.trim():"";}
+function flash(id){const h=document.getElementById(id);h.style.display="inline";setTimeout(()=>h.style.display="none",1800);}
+
+/* ================= Word 檔案下載 ================= */
+function docShell(title,body){
+return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>${title}</title>
+<style>
+body{font-family:"Microsoft JhengHei","標楷體";font-size:14pt;line-height:1.7;color:#222;}
+h1{font-size:20pt;color:#22315C;text-align:center;border-bottom:3px solid #FFC53D;padding-bottom:8pt;}
+h2{font-size:16pt;color:#7C5CFF;border-left:8pt solid #7C5CFF;padding-left:8pt;margin-top:18pt;}
+.meta{text-align:center;color:#555;font-size:12pt;margin-bottom:14pt;}
+.enbox{background:#F4F9FF;border:1pt dashed #7C93C9;padding:10pt;font-size:12pt;}
+table{border-collapse:collapse;width:100%;}
+td,th{border:1pt solid #7C93C9;padding:8pt;font-size:13pt;vertical-align:top;}
+th{background:#EEF3FF;}
+.line{border-bottom:1pt solid #999;height:26pt;}
+.foot{margin-top:20pt;text-align:center;color:#777;font-size:11pt;}
+</style></head><body>
+<h1>${title}</h1>
+<div class="meta">楊梅高中圖書館｜114年度公播影片系列　　班級：＿＿＿＿＿　座號：＿＿＿　姓名：＿＿＿＿＿＿</div>
+${body}
+<div class="foot">～ 楊梅高中圖書館 影像教育推廣 ～</div>
+</body></html>`;
+}
+function dl(filename,html){
+  const blob=new Blob(["\ufeff",html],{type:"application/msword;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},400);
+  sfx.dl(); toast("⬇️ 已下載："+filename);
+}
+function filmHead(f){return `<p><b>片名：</b>${f.zh}（${f.en}）　<b>導演／作者：</b>${f.dir}　<b>發行：</b>${f.dist}</p>`;}
+function blanks(n){let s="";for(let i=0;i<n;i++)s+='<div class="line">&nbsp;</div>';return s;}
+
+function dlIntro(){
+  const f=curFilm;
+  dl(`${f.zh}_介紹單.doc`,docShell(`《${f.zh}》影片介紹單`,
+    filmHead(f)+
+    `<h2>中文介紹</h2><p>${f.introZh}</p>
+     <h2>English Introduction</h2><div class="enbox">${f.introEn}</div>
+     <h2>看完介紹，我最期待的是……</h2>${blanks(3)}`));
+}
+function dlStudy(){
+  const f=curFilm;
+  dl(`${f.zh}_學習單.doc`,docShell(`《${f.zh}》閱讀與欣賞學習單`,
+    filmHead(f)+
+    `<h2>閱讀與欣賞指導</h2>
+     <table><tr><th style="width:18%">階段</th><th>引導問題</th><th style="width:38%">我的回答</th></tr>`+
+    f.watch.map((w,i)=>{const m=w.match(/^(觀影[前中後])：(.*)$/);
+      return `<tr><td>${m?m[1]:"思考"}</td><td>${i+1}. ${m?m[2]:w}</td><td>${blanks(3)}</td></tr>`;}).join("")+
+    `</table>`));
+}
+function dlQuiz(){
+  const f=curFilm;
+  dl(`${f.zh}_認證單.doc`,docShell(`《${f.zh}》觀影認證測驗單`,
+    filmHead(f)+
+    `<p>請圈選正確答案，<b>答對 4 題（含）以上</b>即通過認證，可請圖書館蓋認證章。</p>`+
+    f.quiz.map((q,qi)=>`<h2>Q${qi+1}. ${q.q}</h2><p>${q.o.map((o,oi)=>`（${"ABCD"[oi]}）${o}`).join("　　")}</p>`).join("")+
+    `<h2>認證結果</h2><p>得分：＿＿＿／5　　□ 通過（4題以上）　□ 再接再厲　　圖書館認證章：＿＿＿＿＿＿</p>`));
+}
+function dlRec(){
+  const f=curFilm; const r=store.get("rec_"+f.id,{});
+  const stars="⭐".repeat(r.stars||0)||"＿＿＿＿＿";
+  dl(`${f.zh}_推薦單.doc`,docShell(`《${f.zh}》我是最佳代言人推薦單`,
+    filmHead(f)+
+    `<table>
+      <tr><th style="width:24%">代言人</th><td>${esc(r.name)||"＿＿＿＿＿＿"}（${esc(r.cls)||"班級＿＿＿"}）</td></tr>
+      <tr><th>推薦指數</th><td>${stars}（${r.stars||"＿"}／5 顆星）</td></tr>
+      <tr><th>推薦金句</th><td>${esc(r.slogan)||blanks(2)}</td></tr>
+      <tr><th>推薦理由</th><td>${esc(r.why)?esc(r.why).replace(/\n/g,"<br>"):blanks(5)}</td></tr>
+    </table>
+    <p style="margin-top:12pt">💡 小提醒：把推薦單交給圖書館，你的金句就有機會登上「本月最佳代言人」佈告欄！</p>`));
+}
+function dlRef(){
+  const f=curFilm; const r=store.get("ref_"+f.id,{});
+  dl(`${f.zh}_心得單.doc`,docShell(`《${f.zh}》觀影心得省思單`,
+    filmHead(f)+
+    `<p><b>姓名：</b>${esc(r.name)||"＿＿＿＿＿＿"}　<b>班級：</b>${esc(r.cls)||"＿＿＿＿＿"}</p>
+     <h2>最觸動我的一幕／一句台詞</h2>${esc(r.scene)?("<p>"+esc(r.scene).replace(/\n/g,"<br>")+"</p>"):blanks(4)}
+     <h2>我的省思與收穫</h2>${esc(r.learn)?("<p>"+esc(r.learn).replace(/\n/g,"<br>")+"</p>"):blanks(6)}
+     <h2>看完之後，我想採取的一個小行動</h2>${esc(r.action)?("<p>"+esc(r.action)+"</p>"):blanks(2)}`));
+}
+
+/* ================= 彩帶 & Toast ================= */
+function confetti(){
+  const box=document.getElementById("confetti");
+  const colors=["#FF5D8F","#FF9F1C","#00C2A8","#7C5CFF","#2D9CDB","#FFC53D"];
+  for(let i=0;i<70;i++){
+    const b=document.createElement("i");
+    b.className="confetti-bit";
+    b.style.left=Math.random()*100+"vw";
+    b.style.background=colors[i%colors.length];
+    b.style.animationDuration=(2+Math.random()*2)+"s";
+    b.style.animationDelay=(Math.random()*.6)+"s";
+    b.style.width=b.style.height=(8+Math.random()*8)+"px";
+    box.appendChild(b);
+    setTimeout(()=>b.remove(),4800);
+  }
+}
+let toastT=null;
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2600);
+}
+
+renderGrid();
+</script>
+</body>
+</html>
